@@ -2,12 +2,12 @@ PHP cryptMessage
 ======
 
 [![Author](https://img.shields.io/badge/author-falkm-blue.svg?style=flat-square)](https://falk-m.de)
-[![Source Code](http://img.shields.io/badge/source-falkmueller/jSuggest-blue.svg?style=flat-square)](https://github.com/falkmueller/crypMessage)
+[![Source Code](http://img.shields.io/badge/source-falkmueller/jSuggest-blue.svg?style=flat-square)](https://github.com/falkmueller/cryptMessage)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Website](https://img.shields.io/website-falk-falk/http/falk-m.de.svg)](https://falk-m.de)
 
 PHP repository for secure message exchange between applications
-[Documentation and Demo](http://code.falk-m.de/crypeMessage/).
+[Documentation and Demo](https://code.falk-m.de/cryptMessage/).
 
 # install
 
