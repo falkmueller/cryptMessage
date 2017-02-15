@@ -1,5 +1,5 @@
 {
-    "name": "falkm/cryptMessage",
+    "name": "falkm/crypt-message",
     "type": "library",
     "description": "PHP repository for secure message exchange between applications",
     "keywords": [
