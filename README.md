@@ -15,7 +15,7 @@ cryptMessage is available via Composer:
 ```json
 {
     "require": {
-        "falkm/cryptMessage": "1.*"
+        "falkm/crypt-message": "1.*"
     }
 }
 ```
