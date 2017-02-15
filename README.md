@@ -29,7 +29,7 @@ Or download and include the outoloader
 
 # example usage
 
-##1. generate RSA keys and change them on a secure way
+##1. Generate RSA keys and change them on a secure way
 
 ```php
 $rsa_lib = new cryptMessage\lib\rsa();<br/>
@@ -51,7 +51,7 @@ $message->body->data = "test";
 $crypt_message = $message->getCryptMessage($clinet2_public_key);
 ```
 
-##3. client 1 transfer message to client 2
+##3. Client 1 transfer message to client 2
 
 ```php
 $cookies = array(); /*if you receive cookies use them*/
@@ -65,7 +65,7 @@ $response = cryptMessage\lib\curl::exec(array(
 ));
 ```
 
-## 4. client 2 receive message
+## 4. Client 2 receive message and responds
 
 ```php
 use cryptMessage\entity\message;
@@ -104,7 +104,7 @@ echo $rawResonse;
 
 ```
 
-##5. Client 1 receice the response from client 1
+##5. Client 1 receice the response from client 2
 
 ```php
 /* $response is a array from culr request from step 3*/
