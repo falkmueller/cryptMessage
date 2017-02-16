@@ -75,7 +75,7 @@
           <code>
                 $message = new cryptMessage\entity\message();<br/>
                 $message->body->data = "test";<br/>
-                $crypt_message = $message->getCryptMessage($my_private_key);
+                $crypt_message = $message->getCryptMessage($other_public_key);
           </code><br/>
     
           
@@ -111,7 +111,7 @@
                 $cryptMessage = "{...}";<br/>
                 $error_message = null;<br/>
                 $header_check = function($header){ return true;/*check timestamp und if slug unique*/};<br/>
-                $message = cryptMessage\entity\message::getFromRawRequest($cryptMessage, $other_public_key, $error_message);
+                $message = cryptMessage\entity\message::getFromRawRequest($cryptMessage, $my_private_key, $error_message);
           </code><br/>
     
           
@@ -151,22 +151,22 @@
         });
         
         $("#form_createMessage").submit(function(){
-           var private_key = "";
+           var public_key = "";
             
            if( $("#from_client_1").is(":checked")){
-               private_key = $("#private_key_1").val();
+               public_key = $("#public_key_2").val();
            } else {
-               private_key = $("#private_key_2").val();
+               public_key = $("#public_key_1").val();
            }
            
-           if(private_key.length == 0){
+           if(public_key.length == 0){
                alert("generate or insert keys first.");
                return false;
            }
            
            $.ajax({
                 url: "server.php",
-                data: {func: "generateCryptMessage", data: $("#message").val(), "private_key": private_key},
+                data: {func: "generateCryptMessage", data: $("#message").val(), "public_key": public_key},
                 error: function(){ alert("SERVER ERROR");},
                 success: function(res){
                     if(res.message){
@@ -182,15 +182,15 @@
         });
         
         $("#form_decryptMessage").submit(function(){
-           var public_key = "";
+           var private_key = "";
             
            if( $("#from_client_1").is(":checked")){
-               public_key = $("#public_key_1").val();
+               private_key = $("#private_key_2").val();
            } else {
-               public_key = $("#public_key_2").val();
+               private_key = $("#private_key_1").val();
            }
            
-           if(public_key.length == 0){
+           if(private_key.length == 0){
                alert("generate or insert keys first.");
                return false;
            }
@@ -203,7 +203,7 @@
            
            $.ajax({
                 url: "server.php",
-                data: {func: "decryptMessage", cryptMessage: cryptMessage, "public_key": public_key},
+                data: {func: "decryptMessage", cryptMessage: cryptMessage, "private_key": private_key},
                 error: function(){ alert("SERVER ERROR");},
                 success: function(res){
                     if(res.message){

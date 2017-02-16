@@ -22,7 +22,7 @@ elseif ($_REQUEST["func"] == "generateCryptMessage") {
     $message = new cryptMessage\entity\message();
     $message->body->data = $_REQUEST["data"];
     
-    $result["crypt_message"] = $message->getCryptMessage($_REQUEST["private_key"]);
+    $result["crypt_message"] = $message->getCryptMessage($_REQUEST["public_key"]);
     if(empty($result["crypt_message"])){
         $result["message"] = "massage con not be create.";
     }  
@@ -30,10 +30,10 @@ elseif ($_REQUEST["func"] == "generateCryptMessage") {
 elseif ($_REQUEST["func"] == "decryptMessage"){
     
     $cryptMessage = $_REQUEST["cryptMessage"];
-    $public_key = $_REQUEST["public_key"];
+    $private_key = $_REQUEST["private_key"];
     $error_message = null;
     $header_check = function($header){ return true;/*check timestamp und if slug unique*/};
-    $message = cryptMessage\entity\message::getFromRawRequest($cryptMessage, $public_key, $error_message);
+    $message = cryptMessage\entity\message::getFromRawRequest($cryptMessage, $private_key, $error_message);
     
     if($error_message){
         $result["message"] = $error_message;

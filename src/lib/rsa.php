@@ -27,22 +27,29 @@ class rsa {
         }
     }
 
-    public function encrypt($message, $private_key) {
+    public function encrypt($message, $key, $is_public = true) {
         
-        if(!openssl_private_encrypt($message, $krypt, $private_key)){
+        if(!$is_public && !openssl_private_encrypt($message, $krypt, $key)){
+            return null;
+        }
+        elseif ($is_public && !openssl_public_encrypt($message, $krypt, $key)){
             return null;
         }
     
         return trim(helper::urlsafeB64Encode($krypt));
     }
     
-    public function decrypt($krypt, $public_key) {
+    public function decrypt($krypt, $key, $is_private = true) {
         
-        if(!openssl_public_decrypt(helper::urlsafeB64Decode($krypt), $message, $public_key)){
+        if(!$is_private && !openssl_public_decrypt(helper::urlsafeB64Decode($krypt), $message, $key)){
             return null;
-        } else {
-            return trim($message);
         }
+        elseif ($is_private && !openssl_private_decrypt(helper::urlsafeB64Decode($krypt), $message, $key)){
+            return null;
+        }
+            
+        return trim($message);
+      
     }
     
     
