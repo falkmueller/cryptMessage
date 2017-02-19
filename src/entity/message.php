@@ -32,7 +32,7 @@ class message {
             return null;
         }
         
-        $aes_lib = new aes(256);
+        $aes_lib = new aes();
         $header = json_decode($aes_lib->decrypt($rowMessage["header"], $header_key), true);
         if(!$header){
             $error_message = "header can not be decrypt";
@@ -67,7 +67,7 @@ class message {
     }
 
     public function getCryptMessage($rsa_encrypt_key){
-        $aes_lib = new aes(256);
+        $aes_lib = new aes();
         
         $body_key = $aes_lib->generateKey();
         

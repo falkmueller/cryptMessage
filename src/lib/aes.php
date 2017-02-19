@@ -43,7 +43,7 @@ class aes {
         $key = substr($salted, 0, 32);
         $iv  = substr($salted, 32,16);
 
-        $encrypted_data = openssl_encrypt($data, 'aes-256-cbc', $key, true, $iv);
+        $encrypted_data = openssl_encrypt($data, 'aes-'.$this->blockSize.'-cbc', $key, true, $iv);
         return base64_encode('Salted__' . $salt . $encrypted_data);
     }
     
@@ -63,7 +63,7 @@ class aes {
         $key = substr($salted, 0, 32);
         $iv  = substr($salted, 32,16);
         
-        return openssl_decrypt($ct, 'aes-256-cbc', $key, true, $iv);
+        return openssl_decrypt($ct, 'aes-'.$this->blockSize.'-cbc', $key, true, $iv);
         
     }
   
