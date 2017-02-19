@@ -9,6 +9,7 @@ class messageHeader {
     public $requestSlug;
     public $digest;
     public $action;
+    public $cryptKey;
             
     function __construct(){
         $this->timestamp = time();

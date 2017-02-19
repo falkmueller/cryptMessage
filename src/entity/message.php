@@ -13,11 +13,10 @@ class message {
     function __construct(){
         $this->body = new messageBody();
         $this->header = new messageHeader();
-        $this->ident = "";
     }
     
     public static function getFromRawRequest($rowMessage, $rsa_decrypt_key, &$error_message, $header_check = null){
-        $rowMessage = json_decode($rowMessage, true);
+        $rowMessage = json_decode(urldecode($rowMessage), true);
         
         if(!$rowMessage || !is_array($rowMessage) || !isset($rowMessage["header"])|| !isset($rowMessage["body"])|| !isset($rowMessage["key"])){
             $error_message = "incorrect rowMessage";
@@ -56,7 +55,7 @@ class message {
             return null;
         }
         
-        $body = json_decode($aes_lib->decrypt($rowMessage["body"], \cryptMessage\lib\helper::urlsafeB64Decode($message->header->cryptKey)), true);
+        $body = json_decode($aes_lib->decrypt($rowMessage["body"], base64_decode($message->header->cryptKey)), true);
         if(!$body){
             $error_message = "body can not be decrypt";
             return null;
@@ -74,7 +73,7 @@ class message {
         
         $rawBody = $aes_lib->encrypt(json_encode($this->body),$body_key);
         
-        $this->header->cryptKey = \cryptMessage\lib\helper::urlsafeB64Encode($body_key);
+        $this->header->cryptKey = base64_encode($body_key);
         $this->header->digest = md5($rawBody.$this->header->slug);
         
         $header_key = $aes_lib->generateKey();
@@ -87,7 +86,7 @@ class message {
             return null;
         }
         
-        return json_encode(array("key" => $rawKey, "header" => $rawHeader, "body" => $rawBody));
+        return urlencode(json_encode(array("key" => $rawKey, "header" => $rawHeader, "body" => $rawBody)));
     }
     
 }

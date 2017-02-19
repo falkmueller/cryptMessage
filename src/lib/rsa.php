@@ -36,15 +36,15 @@ class rsa {
             return null;
         }
     
-        return trim(helper::urlsafeB64Encode($krypt));
+        return trim(base64_encode($krypt));
     }
     
     public function decrypt($krypt, $key, $is_private = true) {
         
-        if(!$is_private && !openssl_public_decrypt(helper::urlsafeB64Decode($krypt), $message, $key)){
+        if(!$is_private && !openssl_public_decrypt(base64_decode($krypt), $message, $key)){
             return null;
         }
-        elseif ($is_private && !openssl_private_decrypt(helper::urlsafeB64Decode($krypt), $message, $key)){
+        elseif ($is_private && !openssl_private_decrypt(base64_decode($krypt), $message, $key)){
             return null;
         }
             

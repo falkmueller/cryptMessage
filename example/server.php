@@ -41,6 +41,6 @@ elseif ($_REQUEST["func"] == "decryptMessage"){
         $result["decrypt_message"] = json_encode($message);
         $result["decrypt_data"] = $message->body->data;
     }
-}
+} 
 
 echo json_encode( $result );

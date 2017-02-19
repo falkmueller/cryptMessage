@@ -11,7 +11,7 @@ class aes {
 * 
 * @param type $blockSize
 */
-  function __construct($blockSize = 512) {
+  function __construct($blockSize = 256) {
     $this->blockSize = $blockSize;
   }
   
@@ -44,11 +44,11 @@ class aes {
         $iv  = substr($salted, 32,16);
 
         $encrypted_data = openssl_encrypt($data, 'aes-256-cbc', $key, true, $iv);
-        return helper::urlsafeB64Encode('Salted__' . $salt . $encrypted_data);
+        return base64_encode('Salted__' . $salt . $encrypted_data);
     }
     
     public function decrypt($edata, $password) {
-        $data = helper::urlsafeB64Decode($edata);
+        $data = base64_decode($edata);
         $salt = substr($data, 8, 8);
         $ct = substr($data, 16);
         

@@ -1,4 +1,4 @@
-PHP cryptMessage
+cryptMessage (PHP and JS)
 ======
 
 [![Author](https://img.shields.io/badge/author-falkm-blue.svg?style=flat-square)](https://falk-m.de)
@@ -6,7 +6,8 @@ PHP cryptMessage
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Website](https://img.shields.io/website-falk-falk/http/falk-m.de.svg)](https://falk-m.de)
 
-PHP repository for secure message exchange between applications
+PHP repository for secure message exchange between applications.
+Full compatible with a equivalent Javascript code from this repository.
 [Documentation and Demo](https://code.falk-m.de/cryptMessage/).
 
 # install

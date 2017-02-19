@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>PHP crypeMessage</title>
+    <title>JS crypeMessage</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -23,19 +23,21 @@
             <div class="container">   
                 <h1>crypeMessage</h1>
                 <p>
-                    PHP crypt message exchange with RSA and AES.<br>
-                    <a href="js.html">See Javascript equivalent</a>
+                    Javascript crypt message exchange with RSA and AES.<br>
+                    <a href="index.html">See PHP equivalent</a>
                 </p>
             </div>
         </div> 
       
       <div class="container">
           <h2>1. generate keys</h2>
-          PHP:<br/>
+          Javascript:<br/>
           <code>
-               $rsa_lib = new cryptMessage\lib\rsa();<br/>
-               $private_Key = null; $public_Key = null;<br/>
-                $rsa_lib->generateKeys($private_Key, $public_Key);
+               var rsaLib = new JSEncrypt({default_key_size: 2048});<br/>
+                rsaLib.getKey(function () {<br/>
+                    console.log(rsaLib.getPrivateKey());<br/>
+                    console.log(rsaLib.getPublicKey());<br/>
+                });<br/>
           </code><br/>
           
           <form id="form_keys">
@@ -72,11 +74,11 @@
       
       <div class="container">
           <h2>2. create message</h2>
-          PHP:<br/>
+          Javascript:<br/>
           <code>
-                $message = new cryptMessage\entity\message();<br/>
-                $message->body->data = "test";<br/>
-                $crypt_message = $message->getCryptMessage($other_public_key);
+                var message = new cryptMessage.message();<br/>
+                message.body.data = "test";<br/>
+                var crypted = message.getCryptMessage(public_key);
           </code><br/>
     
           
@@ -107,12 +109,17 @@
       
       <div class="container">
           <h2>3. decrypt message</h2>
-          PHP:<br/>
+          Javascript:<br/>
           <code>
-                $cryptMessage = "{...}";<br/>
-                $error_message = null;<br/>
-                $header_check = function($header){ return true;/*check timestamp und if slug unique*/};<br/>
-                $message = cryptMessage\entity\message::getFromRawRequest($cryptMessage, $my_private_key, $error_message);
+                var message = new cryptMessage.message();<br/>
+                var encryptedmessage = message.getFromRawRequest(cryptedMessage, private_key);<br/>
+                <br/>
+                if (typeof encryptedmessage === 'string' || encryptedmessage instanceof String){<br/>
+                    alert(encryptedmessage);<br/>
+                    return false;<br/>
+                }<br/>
+                <br/>
+                console.log(message.body.data);
           </code><br/>
     
           
@@ -134,18 +141,29 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
    
+    <script src="js/GibberishAES/gibberish-aes-1.0.0.min.js"></script>
+    <script src="js/jsencrypt/jsencrypt.min.js"></script>
+    <script src="js/base64/base64.js"></script>
+    <script src="js/md5/md5.min.js"></script>
+    <script src="js/cryptMessage.js"></script>
+    
     <script type="text/javascript">
         $("#form_keys").submit(function(){
-            $.ajax({
-                url: "server.php",
-                data: {func: "generateKeys"},
-                error: function(){ alert("SERVER ERROR");},
-                success: function(res){
-                    $("#private_key_1").val(res.private_key_1);
-                    $("#public_key_1").val(res.public_key_1);
-                    $("#private_key_2").val(res.private_key_2);
-                    $("#public_key_2").val(res.public_key_2);
-                }
+            $("#private_key_1").val("please wait (ca. 1 min)...");
+            $("#public_key_1").val("please wait (ca. 1 min)...");
+            $("#private_key_2").val("please wait (ca. 1 min)...");
+            $("#public_key_2").val("please wait (ca. 1 min)...");
+            
+            var rsaLib = new JSEncrypt({default_key_size: 2048});
+            rsaLib.getKey(function () {
+                $("#private_key_1").val(rsaLib.getPrivateKey());
+                $("#public_key_1").val(rsaLib.getPublicKey());
+            });
+            
+            var rsaLib2 = new JSEncrypt({default_key_size: 2048});
+            rsaLib2.getKey(function () {
+                $("#private_key_2").val(rsaLib2.getPrivateKey());
+                $("#public_key_2").val(rsaLib2.getPublicKey());
             });
             
             return false;
@@ -165,19 +183,11 @@
                return false;
            }
            
-           $.ajax({
-                url: "server.php",
-                data: {func: "generateCryptMessage", data: $("#message").val(), "public_key": public_key},
-                error: function(){ alert("SERVER ERROR");},
-                success: function(res){
-                    if(res.message){
-                        alert(res.message);
-                        return;
-                    }
-                    
-                    $("#crypt_message").val(res.crypt_message);
-                }
-            });
+           var message = new cryptMessage.message();
+           message.body.data = $("#message").val();
+           var crypted = message.getCryptMessage(public_key);
+           $("#crypt_message").val(crypted);
+          
            
            return false;
         });
@@ -196,26 +206,23 @@
                return false;
            }
            
-           var cryptMessage = $("#crypt_message").val();
-           if(cryptMessage.length == 0){
+           var cryptedMessage = $("#crypt_message").val();
+           if(cryptedMessage.length == 0){
                alert("generate or insert crypt message first.");
                return false;
            }
            
-           $.ajax({
-                url: "server.php",
-                data: {func: "decryptMessage", cryptMessage: cryptMessage, "private_key": private_key},
-                error: function(){ alert("SERVER ERROR");},
-                success: function(res){
-                    if(res.message){
-                        alert(res.message);
-                        return;
-                    }
-                    
-                    $("#decrypt_message").val(res.decrypt_message);
-                    $("#decrypt_data").val(res.decrypt_data);
-                }
-            });
+           var message = new cryptMessage.message();
+           var encryptedmessage = message.getFromRawRequest(cryptedMessage, private_key);
+           
+           if (typeof encryptedmessage === 'string' || encryptedmessage instanceof String){
+               alert(encryptedmessage);
+               return false;
+           }
+           
+           $("#decrypt_message").val(JSON.stringify(encryptedmessage));
+           $("#decrypt_data").val(encryptedmessage.body.data);
+
            
            return false;
            
